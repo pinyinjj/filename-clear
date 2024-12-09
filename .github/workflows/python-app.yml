@@ -30,11 +30,11 @@ jobs:
         run: |
           pyinstaller --onefile main.py  # 使用 pyinstaller 打包 main.py 为一个可执行文件
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v2
+      - name: Upload build directory
+        uses: actions/upload-artifact@v3
         with:
-          name: exe-file
-          path: dist/filename_clear.exe  # 上传打包后的文件，路径需与实际路径匹配
+          name: build-artifacts
+          path: ./build/
           
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
