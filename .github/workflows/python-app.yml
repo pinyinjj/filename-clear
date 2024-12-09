@@ -3,10 +3,10 @@ name: Build and Release
 on:
   push:
     branches:
-      - master   # 监听 master 分支的更新，可以改为你自己的分支名
+      - master  # Watch for updates on the master branch, change if needed
   pull_request:
     branches:
-      - master   # 当向 master 分支发起 PR 时，也会触发
+      - master  # Trigger on pull requests to the master branch
 
 jobs:
   build:
@@ -30,11 +30,20 @@ jobs:
         run: |
           pyinstaller --onefile --add-data "trash_info.py;." main.py
 
-      - name: Create Git tag
+      - name: Set up SSH key for GitHub Actions
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Create Git tag and push via SSH
         run: |
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git config --global user.name "github-actions[bot]"
-          git tag v1.0.0
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          
+          # Create tag only if it doesn't already exist
+          git tag v1.0.0 || echo "Tag v1.0.0 already exists"
+          
+          # Push the tag using SSH
+          git push git@github.com:${{ github.repository }} v1.0.0
