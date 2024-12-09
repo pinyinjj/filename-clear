@@ -3,10 +3,10 @@ name: Build and Release
 on:
   push:
     branches:
-      - master   # 监听 main 分支的更新，可以改为你自己的分支名
+      - master   # 监听 master 分支的更新，可以改为你自己的分支名
   pull_request:
     branches:
-      - master   # 当向 main 分支发起 PR 时，也会触发
+      - master   # 当向 master 分支发起 PR 时，也会触发
 
 jobs:
   build:
@@ -28,17 +28,17 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller --onefile main.py  # 使用 pyinstaller 打包 main.py 为一个可执行文件
+          pyinstaller --onefile --add-data "trash_info.py;." main.py  # 使用 PyInstaller 构建
 
       - name: Upload build directory
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts
           path: ./build/
-          
+
       - name: Create GitHub release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/filename_clear.exe  # 上传文件到 GitHub Releases
+          files: dist/main.exe  # 上传文件到 GitHub Releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 自动使用 GitHub 提供的 token 进行授权
