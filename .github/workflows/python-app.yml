@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -32,22 +32,9 @@ jobs:
 
       - name: Create Git tag
         run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"  # 配置 bot 的邮箱
-          git config --global user.name "github-actions[bot]"  # 配置 bot 的用户名
-          git tag v1.0.0  # 创建一个新标签
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/pinyinjj/filename-clear.git v1.0.0  # 使用 GITHUB_TOKEN 推送标签
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-artifacts
-          path: ./build/
-
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/main.exe
-          tag_name: v1.0.0  # 指定发布标签
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git tag v1.0.0
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }} v1.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub 提供的 token 进行授权
-
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
