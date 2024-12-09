@@ -3,10 +3,10 @@ name: Build and Release
 on:
   push:
     branches:
-      - main   # 监听 main 分支的更新，可以改为你自己的分支名
+      - master   # 监听 main 分支的更新，可以改为你自己的分支名
   pull_request:
     branches:
-      - main   # 当向 main 分支发起 PR 时，也会触发
+      - master   # 当向 main 分支发起 PR 时，也会触发
 
 jobs:
   build:
